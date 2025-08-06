@@ -18,6 +18,8 @@ from boltz.model.modules.encodersv2 import (
 )
 
 from boltz.model.modules import tenstorrent
+from boltz.model.modules.tenstorrent import torch_timing_decorator
+
 
 
 class ContactConditioning(nn.Module):
@@ -33,6 +35,7 @@ class ContactConditioning(nn.Module):
         self.cutoff_min = cutoff_min
         self.cutoff_max = cutoff_max
 
+    @torch_timing_decorator
     def forward(self, feats):
         assert const.contact_conditioning_info["UNSPECIFIED"] == 0
         assert const.contact_conditioning_info["UNSELECTED"] == 1
@@ -157,6 +160,7 @@ class InputEmbedder(nn.Module):
             )
             self.mol_type_conditioning_init.weight.data.fill_(0)
 
+    @torch_timing_decorator
     def forward(self, feats: dict[str, Tensor], affinity: bool = False) -> Tensor:
         """Perform the forward pass.
 
@@ -260,6 +264,7 @@ class TemplateModule(nn.Module):
             activation_checkpointing=activation_checkpointing,
         )
 
+    @torch_timing_decorator
     def forward(
         self,
         z: Tensor,
@@ -416,6 +421,7 @@ class TemplateV2Module(nn.Module):
             )
         )
 
+    @torch_timing_decorator
     def forward(
         self,
         z: Tensor,
@@ -572,6 +578,7 @@ class MSAModule(nn.Module):
                 )
             )
 
+    @torch_timing_decorator
     def forward(
         self,
         z: Tensor,
@@ -719,6 +726,7 @@ class MSALayer(nn.Module):
             c_out=token_z,
         )
 
+    @torch_timing_decorator
     def forward(
         self,
         z: Tensor,
@@ -782,6 +790,7 @@ class BFactorModule(nn.Module):
         self.bfactor = nn.Linear(token_s, num_bins)
         self.num_bins = num_bins
 
+    @torch_timing_decorator
     def forward(self, s: Tensor) -> Tensor:
         """Perform the forward pass.
 
@@ -816,6 +825,7 @@ class DistogramModule(nn.Module):
         self.num_distograms = num_distograms
         self.num_bins = num_bins
 
+    @torch_timing_decorator
     def forward(self, z: Tensor) -> Tensor:
         """Perform the forward pass.
 

@@ -35,6 +35,8 @@ from boltz.model.modules.utils import (
 from boltz.model.potentials.potentials import get_potentials
 
 from boltz.model.modules import tenstorrent
+from boltz.model.modules.tenstorrent import torch_timing_decorator
+
 
 
 class DiffusionModule(Module):
@@ -126,6 +128,7 @@ class DiffusionModule(Module):
             # transformer_post_layer_norm=transformer_post_ln,
         )
 
+    @torch_timing_decorator
     def forward(
         self,
         s_inputs,  # Float['b n ts']
@@ -262,6 +265,7 @@ class AtomDiffusion(Module):
     def c_noise(self, sigma):
         return log(sigma / self.sigma_data) * 0.25
 
+    @torch_timing_decorator
     def preconditioned_network_forward(
         self,
         noised_atom_coords,  #: Float['b m 3'],
@@ -537,6 +541,7 @@ class AtomDiffusion(Module):
             ).exp()
         )
 
+    @torch_timing_decorator
     def forward(
         self,
         s_inputs,

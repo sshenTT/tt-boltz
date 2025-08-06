@@ -19,6 +19,7 @@ from boltz.model.layers.triangular_mult import (
     TriangleMultiplicationOutgoing,
 )
 from boltz.model.modules.encoders import AtomAttentionEncoder
+from boltz.model.modules.tenstorrent import torch_timing_decorator
 
 
 class InputEmbedder(nn.Module):
@@ -81,6 +82,7 @@ class InputEmbedder(nn.Module):
                 structure_prediction=False,
             )
 
+    @torch_timing_decorator
     def forward(self, feats: dict[str, Tensor]) -> Tensor:
         """Perform the forward pass.
 
@@ -203,6 +205,7 @@ class MSAModule(nn.Module):
                     )
                 )
 
+    @torch_timing_decorator
     def forward(
         self,
         z: Tensor,
@@ -349,6 +352,7 @@ class MSALayer(nn.Module):
             c_out=token_z,
         )
 
+    @torch_timing_decorator
     def forward(
         self,
         z: Tensor,
@@ -505,6 +509,7 @@ class PairformerModule(nn.Module):
                     )
                 )
 
+    @torch_timing_decorator
     def forward(
         self,
         s: Tensor,
@@ -610,6 +615,7 @@ class PairformerLayer(nn.Module):
             self.transition_s = Transition(token_s, token_s * 4)
         self.transition_z = Transition(token_z, token_z * 4)
 
+    @torch_timing_decorator
     def forward(
         self,
         s: Tensor,
@@ -670,6 +676,7 @@ class DistogramModule(nn.Module):
         super().__init__()
         self.distogram = nn.Linear(token_z, num_bins)
 
+    @torch_timing_decorator
     def forward(self, z: Tensor) -> Tensor:
         """Perform the forward pass.
 

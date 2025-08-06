@@ -16,6 +16,8 @@ from boltz.model.modules.trunkv2 import (
 from boltz.model.modules.utils import LinearNoBias
 
 from boltz.model.modules import tenstorrent
+from boltz.model.modules.tenstorrent import torch_timing_decorator
+
 
 
 class ConfidenceModule(nn.Module):
@@ -113,6 +115,7 @@ class ConfidenceModule(nn.Module):
             **confidence_args,
         )
 
+    @torch_timing_decorator
     def forward(
         self,
         s_inputs,  # Float['b n ts']
@@ -278,6 +281,7 @@ class ConfidenceHeads(nn.Module):
                 token_s, 2 * self.max_num_atoms_per_token
             )
 
+    @torch_timing_decorator
     def forward(
         self,
         s,  # Float['b n ts']

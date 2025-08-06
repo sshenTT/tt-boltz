@@ -3,8 +3,10 @@ from torch import nn
 
 from boltz.data import const
 from boltz.model.loss.confidence import compute_frame_pred
+from boltz.model.modules.tenstorrent import torch_timing_decorator
 
 
+@torch_timing_decorator
 def compute_aggregated_metric(logits, end=1.0):
     """Compute the metric from the logits.
 
@@ -34,6 +36,7 @@ def compute_aggregated_metric(logits, end=1.0):
     return plddt
 
 
+@torch_timing_decorator
 def tm_function(d, Nres):
     """Compute the rescaling function for pTM.
 
@@ -54,6 +57,7 @@ def tm_function(d, Nres):
     return 1 / (1 + (d / d0) ** 2)
 
 
+@torch_timing_decorator
 def compute_ptms(logits, x_preds, feats, multiplicity):
     """Compute pTM and ipTM scores.
 

@@ -15,6 +15,7 @@ from boltz.model.modules.trunk import (
     PairformerModule,
 )
 from boltz.model.modules.utils import LinearNoBias
+from boltz.model.modules.tenstorrent import torch_timing_decorator
 
 
 class ConfidenceModule(nn.Module):
@@ -180,6 +181,7 @@ class ConfidenceModule(nn.Module):
             **confidence_args,
         )
 
+    @torch_timing_decorator
     def forward(
         self,
         s_inputs,
@@ -373,6 +375,7 @@ class ConfidenceHeads(nn.Module):
         if self.compute_pae:
             self.to_pae_logits = LinearNoBias(token_z, num_pae_bins)
 
+    @torch_timing_decorator
     def forward(
         self,
         s,

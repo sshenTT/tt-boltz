@@ -12,6 +12,7 @@ from torch.nn import (
 
 from boltz.model.layers.attention import AttentionPairBias
 from boltz.model.modules.utils import LinearNoBias, SwiGLU, default
+from boltz.model.modules.tenstorrent import torch_timing_decorator
 
 
 class AdaLN(Module):
@@ -34,6 +35,7 @@ class AdaLN(Module):
         self.s_scale = Linear(dim_single_cond, dim)
         self.s_bias = LinearNoBias(dim_single_cond, dim)
 
+    @torch_timing_decorator
     def forward(self, a, s):
         a = self.a_norm(a)
         s = self.s_norm(s)
@@ -75,6 +77,7 @@ class ConditionedTransitionBlock(Module):
 
         self.output_projection = nn.Sequential(output_projection_linear, nn.Sigmoid())
 
+    @torch_timing_decorator
     def forward(
         self,
         a,
@@ -148,6 +151,7 @@ class DiffusionTransformer(Module):
                     )
                 )
 
+    @torch_timing_decorator
     def forward(
         self,
         a,
@@ -222,6 +226,7 @@ class DiffusionTransformerLayer(Module):
             dim_single=dim, dim_single_cond=dim_single_cond
         )
 
+    @torch_timing_decorator
     def forward(
         self,
         a,
@@ -277,6 +282,7 @@ class AtomTransformer(Module):
             **diffusion_transformer_kwargs
         )
 
+    @torch_timing_decorator
     def forward(
         self,
         q,

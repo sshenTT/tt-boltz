@@ -8,6 +8,7 @@ from boltz.model.modules.encodersv2 import (
     AtomEncoder,
     PairwiseConditioning,
 )
+from boltz.model.modules.tenstorrent import torch_timing_decorator
 
 
 class DiffusionConditioning(Module):
@@ -80,6 +81,7 @@ class DiffusionConditioning(Module):
                 )
             )
 
+    @torch_timing_decorator
     def forward(
         self,
         s_trunk,  # Float['b n ts']

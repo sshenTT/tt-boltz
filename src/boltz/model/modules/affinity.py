@@ -8,6 +8,7 @@ from boltz.model.modules.transformersv2 import DiffusionTransformer
 from boltz.model.modules.utils import LinearNoBias
 
 from boltz.model.modules import tenstorrent
+from boltz.model.modules.tenstorrent import torch_timing_decorator
 
 
 class GaussianSmearing(torch.nn.Module):
@@ -25,6 +26,7 @@ class GaussianSmearing(torch.nn.Module):
         self.coeff = -0.5 / (offset[1] - offset[0]).item() ** 2
         self.register_buffer("offset", offset)
 
+    @torch_timing_decorator
     def forward(self, dist):
         shape = dist.shape
         dist = dist.view(-1, 1) - self.offset.view(1, -1)
@@ -83,6 +85,7 @@ class AffinityModule(nn.Module):
             groups=groups,
         )
 
+    @torch_timing_decorator
     def forward(
         self,
         s_inputs,
@@ -186,6 +189,7 @@ class AffinityHeadsTransformer(nn.Module):
         )
         self.to_affinity_logits_binary = nn.Linear(1, 1)
 
+    @torch_timing_decorator
     def forward(
         self,
         z,

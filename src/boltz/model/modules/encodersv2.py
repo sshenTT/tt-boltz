@@ -12,6 +12,7 @@ import boltz.model.layers.initialize as init
 from boltz.model.layers.transition import Transition
 from boltz.model.modules.transformersv2 import AtomTransformer
 from boltz.model.modules.utils import LinearNoBias
+from boltz.model.modules.tenstorrent import torch_timing_decorator
 
 
 class FourierEmbedding(Module):
@@ -24,6 +25,7 @@ class FourierEmbedding(Module):
         torch.nn.init.normal_(self.proj.bias, mean=0, std=1)
         self.proj.requires_grad_(False)
 
+    @torch_timing_decorator
     def forward(
         self,
         times,  # Float[' b'],
@@ -46,6 +48,7 @@ class RelativePositionEncoder(Module):
         self.fix_sym_check = fix_sym_check
         self.cyclic_pos_enc = cyclic_pos_enc
 
+    @torch_timing_decorator
     def forward(self, feats):
         b_same_chain = torch.eq(
             feats["asym_id"][:, :, None], feats["asym_id"][:, None, :]
@@ -154,6 +157,7 @@ class SingleConditioning(Module):
 
         self.transitions = transitions
 
+    @torch_timing_decorator
     def forward(
         self,
         times,  # Float[' b'],
@@ -203,6 +207,7 @@ class PairwiseConditioning(Module):
 
         self.transitions = transitions
 
+    @torch_timing_decorator
     def forward(
         self,
         z_trunk,  # Float['b n n tz'],
@@ -303,6 +308,7 @@ class AtomEncoder(Module):
         )
         init.final_init_(self.p_mlp[5].weight)
 
+    @torch_timing_decorator
     def forward(
         self,
         feats,
@@ -449,6 +455,7 @@ class AtomAttentionEncoder(Module):
             nn.ReLU(),
         )
 
+    @torch_timing_decorator
     def forward(
         self,
         feats,
@@ -535,6 +542,7 @@ class AtomAttentionDecoder(Module):
             )
             init.final_init_(self.atom_feat_to_atom_pos_update[1].weight)
 
+    @torch_timing_decorator
     def forward(
         self,
         a,  # Float['bm n 2ts'],

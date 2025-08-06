@@ -36,6 +36,7 @@ from boltz.model.modules.utils import (
     log,
 )
 from boltz.model.potentials.potentials import get_potentials
+from boltz.model.modules.tenstorrent import torch_timing_decorator
 
 
 class DiffusionModule(Module):
@@ -165,6 +166,7 @@ class DiffusionModule(Module):
             activation_checkpointing=activation_checkpointing,
         )
 
+    @torch_timing_decorator
     def forward(
         self,
         s_inputs,
@@ -700,6 +702,7 @@ class AtomDiffusion(Module):
             ).exp()
         )
 
+    @torch_timing_decorator
     def forward(
         self,
         s_inputs,
